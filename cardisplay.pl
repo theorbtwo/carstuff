@@ -7,8 +7,8 @@ use Twatch;
 
 $|=1;
 
-#my $elm = ELM::Ford->new(usb_vendor => '0403', usb_product => '6001', verbose => 0);
-my $elm = ELM::Ford->new(port => '/dev/ttyUSB0', verbose => 1);
+my $elm = ELM::Ford->new(usb_vendor => '0403', usb_product => '6001', verbose => 0);
+#my $elm = ELM::Ford->new(port => '/dev/ttyUSB0', verbose => 1);
 
 #print "01 0d 1:  [[[", do_command($elm, "01 0d 1"),  "]]]\n";
 
@@ -22,6 +22,7 @@ while (1) {
     my $fuel = $elm->fuel_remaining(50);
 
     my $speed_blocks = int($speed/5);
+    # \xFF is solid block.
     my $speed_char = $speed > 70 ? '*' : "\xFF";
     $twatch->printLine(sprintf("%2d %s", $speed, ($speed_char x $speed_blocks) . (' ' x (17-$speed_blocks))), 1, 1);
 
