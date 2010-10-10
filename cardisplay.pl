@@ -10,12 +10,12 @@ $|=1;
 
 if ($ARGV[0] eq '--fork') {
   print "About to fork\n";
-  my $log_filename = "/root/carstuff/logs/logs-".time.".log";
-  open my $logfh, ">", $log_filename or die "Can't open $log_filename: $!";
+  my $log_filename = "/root/carstuff/logs/log-".scalar(gmtime);
+  #open my $logfh, ">", $log_filename or die "Can't open $log_filename: $!";
   daemonize(chdir => '/root/carstuff/logs',
             close => 1,
-            stdout => $logfh,
-            stderr => $logfh,
+            stdout => $log_filename.".stdout",
+            stderr => $log_filename.".stderr",
            ) or die "Couldn't deamonize: $!";
   print "Forked\n";
 }
