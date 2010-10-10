@@ -4,8 +4,20 @@ use strict;
 use lib './lib';
 use ELM::Ford;
 use Twatch;
+use Daemon::Daemonize ':all';
 
 $|=1;
+
+if ($ARGV[0] eq '--fork') {
+  my $log_filename = "/root/carstuff/logs/logs-".time.".log";
+  open my $logfh, ">", $log_filename or die "Can't open $log_filename: $!";
+  daemonize(chdir => '/root/carstuff/logs',
+            close => 1,
+            stdout => $logfh,
+            stderr => $logfh,
+           ) or die "Couldn't deamonize: $!";
+}
+
 
 my $elm = ELM::Ford->new(usb_vendor => '0403', usb_product => '6001', verbose => 0);
 #my $elm = ELM::Ford->new(port => '/dev/ttyUSB0', verbose => 1);
