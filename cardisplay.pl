@@ -9,6 +9,7 @@ use Daemon::Daemonize ':all';
 $|=1;
 
 if ($ARGV[0] eq '--fork') {
+  print "About to fork\n";
   my $log_filename = "/root/carstuff/logs/logs-".time.".log";
   open my $logfh, ">", $log_filename or die "Can't open $log_filename: $!";
   daemonize(chdir => '/root/carstuff/logs',
@@ -16,18 +17,23 @@ if ($ARGV[0] eq '--fork') {
             stdout => $logfh,
             stderr => $logfh,
            ) or die "Couldn't deamonize: $!";
+  print "Forked\n";
 }
 
 
+print "Connecting to ELM\n";
 my $elm = ELM::Ford->new(usb_vendor => '0403', usb_product => '6001', verbose => 0);
 #my $elm = ELM::Ford->new(port => '/dev/ttyUSB0', verbose => 1);
 
 #print "01 0d 1:  [[[", do_command($elm, "01 0d 1"),  "]]]\n";
 
+print "Connecting to twatch\n";
 my $twatch = Twatch::new('169.254.1.1', undef, 4, 20);
+print "Staring up\n";
 $twatch->clearLCD();
 $twatch->backlightOn();
 
+print "Running!\n";
 while (1) {
     my $speed = $elm->mph;
     # In L.
